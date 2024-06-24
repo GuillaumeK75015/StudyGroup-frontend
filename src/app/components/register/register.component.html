@@ -9,6 +9,7 @@
         <label for="password">Password: </label>
         <input type="password" class="form-control" id="password" formControlName="password" autocomplete="off" />
       </div>
+      <div class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
       <div class="float-end">
         <button [routerLink]="['/']" class="btn btn-outline-danger me-2 mt-3" type="button">
           Close

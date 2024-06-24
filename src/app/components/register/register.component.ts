@@ -10,6 +10,7 @@ import { UserService } from '../../service/user.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -32,7 +33,11 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/home']);
         },
         error: err => {
-          console.error('Error registering user', err);
+          if (err.status === 409) {
+            this.errorMessage = 'Username already exists. Please choose another one.';
+          } else {
+            this.errorMessage = 'An error occurred. Please try again later.';
+          }
         }
       });
     }
