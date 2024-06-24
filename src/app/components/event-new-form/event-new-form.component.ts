@@ -1,67 +1,68 @@
-import { Component } from '@angular/core';
-import { Category } from '../../data/category';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../service/category.service';
 import { EventService } from '../../service/event.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Observer } from 'rxjs';
+import { UserService } from '../../service/user.service';
+import { Category } from '../../data/category';
+import { User } from '../../data/user';
 import { EventCreateInput } from '../../data/event';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { Observer } from 'rxjs';
 
 @Component({
   selector: 'app-event-new-form',
   templateUrl: './event-new-form.component.html',
   styleUrls: ['./event-new-form.component.css']
 })
-
-export class EventNewFormComponent  {
+export class EventNewFormComponent implements OnInit {
   categories: Category[] = [];
+  users: User[] = [];
+  add_event_form: FormGroup;
 
-  add_event_form = this.fb.group({
-    title: [
-      '',
-      {
-        validators: [Validators.required, Validators.minLength(5) ,Validators.maxLength(150)],
-        updateOn: 'blur'
-      }
-    ],
-    categoryId: [
-      '',
-      {
-        validators: [Validators.required],
-        updateOn: 'blur'
-      }
-    ],
-    content: [
-      '',
-      {
-        validators: [Validators.required, Validators.maxLength(2500)],
-        updateOn: 'blur'
-      }
-    ]
-});
+  Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
 
-	Toast = Swal.mixin({
-		toast: true,
-		position: "top-end",
-		showConfirmButton: false,
-		timer: 3000,
-		timerProgressBar: true,
-		didOpen: (toast) => {
-		toast.onmouseenter = Swal.stopTimer;
-		toast.onmouseleave = Swal.resumeTimer;
-		}
-	});
-
-  constructor(private categoryService: CategoryService, private eventService: EventService, private fb: FormBuilder, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private categoryService: CategoryService,
+    private eventService: EventService,
+    private userService: UserService,
+    private router: Router
+  ) {
+    this.add_event_form = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(150)]],
+      categoryId: ['', Validators.required],
+      dateTime: ['', Validators.required],
+      location: ['', Validators.required],
+      content: ['', [Validators.required, Validators.maxLength(2500)]],
+      userId: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
-      this.loadCategories();
+    this.loadCategories();
+    this.loadUsers();
   }
 
   loadCategories(): void {
     this.categoryService.getCategories().subscribe(categories => {
       this.categories = categories;
+    });
+  }
+
+  loadUsers(): void {
+    this.userService.getUsers().subscribe((users: User[]) => {
+      this.users = users;
     });
   }
 
@@ -73,37 +74,45 @@ export class EventNewFormComponent  {
     return this.add_event_form.controls['categoryId'];
   }
 
+  get dateTime() {
+    return this.add_event_form.controls['dateTime'];
+  }
+
+  get location() {
+    return this.add_event_form.controls['location'];
+  }
+
   get content() {
     return this.add_event_form.controls['content'];
   }
 
-  goToHomePage(): void {
-	this.router.navigate(['home']);
+  get userId() {
+    return this.add_event_form.controls['userId'];
   }
 
-	onSubmit(): void {
-	if (this.add_event_form.valid) {
-		const observer: Observer<any> = {
-			next: (response) => {
-				console.log("Formulaire soumis avec succès!", response);
-			},
-			error: (err) => {
-				console.error("Erreur lors de la soumission du formulaire", err);
-			},
-			complete: () => {
-				this.Toast.fire({
-				icon: "success",
-				title: "Event Submitted Successfully"
-				});
-				this.goToHomePage();
-			}
-		};
-		this.eventService.createEvent(this.add_event_form.value as EventCreateInput).subscribe(observer);
+  onSubmit(): void {
+    if (this.add_event_form.valid) {
+      const observer: Observer<any> = {
+        next: (response) => {
+          console.log("Form submitted successfully!", response);
+        },
+        error: (err) => {
+          console.error("Error submitting form", err);
+        },
+        complete: () => {
+          this.Toast.fire({
+            icon: "success",
+            title: "Event submitted successfully"
+          });
+          this.router.navigate(['/']);
+        }
+      };
+      this.eventService.createEvent(this.add_event_form.value as EventCreateInput).subscribe(observer);
     } else {
-		this.Toast.fire({
-			icon: "error",
-			title: "Please review your event"
-			});
-		}
-	};
+      this.Toast.fire({
+        icon: "error",
+        title: "Please review your event"
+      });
+    }
+  }
 }

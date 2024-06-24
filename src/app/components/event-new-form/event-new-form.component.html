@@ -35,33 +35,57 @@
         </div>
       </div>
       <div class="py-2">
-        <span class="mb-3">Content: </span>
-        <textarea
+        <label for="eventDateTime">Date and Time: </label>
+        <input
+          type="datetime-local"
           class="form-control"
-          id="eventContent"
+          id="eventDateTime"
           autocomplete="off"
-          [class.is-invalid]="content.invalid && content.touched"
-          [class.is-valid]="content.valid && content.touched"
-          formControlName="content"
-        ></textarea>
-        <div *ngIf="content.invalid && content.touched" class="invalid-feedback text-danger">
-          <div *ngIf="content?.errors?.['required']">Content is required</div>
-          <div *ngIf="content?.errors?.['maxlength']">Event content should not exceed 2500 characters</div>
+          [class.is-invalid]="dateTime.invalid && dateTime.touched"
+          [class.is-valid]="dateTime.valid && dateTime.touched"
+          formControlName="dateTime"
+        />
+        <div *ngIf="dateTime?.invalid && dateTime?.touched" class="invalid-feedback text-danger">
+          <div *ngIf="dateTime?.errors?.['required']">Date and Time are required</div>
+        </div>
+      </div>
+      <div class="py-2">
+        <label for="eventLocation">Location: </label>
+        <input
+          type="text"
+          class="form-control"
+          id="eventLocation"
+          formControlName="location"
+          autocomplete="off"
+          [class.is-invalid]="location.invalid && location.touched"
+          [class.is-valid]="location.valid && location.touched"
+        />
+        <div *ngIf="location?.invalid && location?.touched" class="invalid-feedback text-danger">
+          <div *ngIf="location?.errors?.['required']">Location is required</div>
+        </div>
+      </div>
+      <div class="py-2">
+        <label for="eventUser">User: </label>
+        <select
+          class="form-select"
+          id="eventUser"
+          formControlName="userId"
+          autocomplete="off"
+          [class.is-invalid]="userId.invalid && userId.touched"
+          [class.is-valid]="userId.valid && userId.touched"
+        >
+          <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+        </select>
+        <div *ngIf="userId?.invalid && userId?.touched" class="invalid-feedback text-danger">
+          <div *ngIf="userId?.errors?.['required']">User is required</div>
         </div>
       </div>
       <div class="float-end">
-        <button
-          [routerLink]="['/']"
-          class="btn btn-outline-danger me-2 mt-3"
-          type="button"
-        >
+        <button [routerLink]="['/']" class="btn btn-outline-danger me-2 mt-3" type="button">
           Close
         </button>
-        <button
-          class="btn btn-success mt-3"
-          type="submit"
-        >
-          Event message
+        <button class="btn btn-success mt-3" type="submit">
+          Submit
         </button>
       </div>
     </form>

@@ -1,23 +1,59 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EventService } from '../../services/event.service';
+import { CategoryService } from '../../services/category.service';
+import { UserService } from '../../services/user.service';
+import { EventCreateInput } from '../../data/event';
 
-import { EventNewFormComponent } from './event-new-form.component';
+@Component({
+  selector: 'app-event-new-form',
+  templateUrl: './event-new-form.component.html',
+  styleUrls: ['./event-new-form.component.css']
+})
+export class EventNewFormComponent implements OnInit {
+  addEventForm: FormGroup;
+  users = [];
+  categories = [];
 
-describe('EventNewFormComponent', () => {
-  let component: EventNewFormComponent;
-  let fixture: ComponentFixture<EventNewFormComponent>;
+  constructor(
+    private fb: FormBuilder,
+    private eventService: EventService,
+    private categoryService: CategoryService,
+    private userService: UserService
+  ) {
+    this.addEventForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(150)]],
+      categoryId: ['', Validators.required],
+      location: ['', Validators.required],
+      dateTime: ['', Validators.required],
+      content: ['', [Validators.required, Validators.maxLength(2500)]],
+      userId: ['', Validators.required]
+    });
+  }
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [EventNewFormComponent]
-    })
-    .compileComponents();
+  ngOnInit() {
+    this.loadCategories();
+    this.loadUsers();
+  }
 
-    fixture = TestBed.createComponent(EventNewFormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
+  }
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  loadUsers() {
+    this.userService.getUsers().subscribe(users => {
+      this.users = users;
+    });
+  }
+
+  onSubmit() {
+    if (this.addEventForm.valid) {
+      const eventInput: EventCreateInput = this.addEventForm.value;
+      this.eventService.createEvent(eventInput).subscribe(response => {
+        console.log('Event created successfully', response);
+      });
+    }
+  }
+}

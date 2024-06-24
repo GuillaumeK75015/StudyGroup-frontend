@@ -1,9 +1,41 @@
-<div *ngIf="events && events.length">
-    <div *ngFor="let event of events">
-        <app-event-list-entry [event]="event"></app-event-list-entry>
+<div class="container py-3">
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by title"
+          formControlName="title"
+        />
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" formControlName="categoryId">
+          <option value="">All Categories</option>
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by location"
+          formControlName="location"
+        />
+      </div>
+      <div class="col-md-4 mt-2">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </div>
     </div>
-</div>
-
-<div *ngIf="!events || events.length === 0">
-    <p>No events available.</p>
+  </form>
+  <div class="row mt-3">
+    <div *ngIf="events && events.length">
+      <div *ngFor="let event of events" class="col-md-4">
+        <app-event-list-entry [event]="event"></app-event-list-entry>
+      </div>
+    </div>
+    <div *ngIf="!events || events.length === 0">
+      <p>No events available.</p>
+    </div>
+  </div>
 </div>
