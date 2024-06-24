@@ -1,0 +1,69 @@
+<div class="container py-3">
+  <main class="form-signin w-100 m-auto">
+    <form [formGroup]="add_event_form" (ngSubmit)="onSubmit()">
+      <div class="py-2">
+        <span class="mb-3">Title: </span>
+        <input
+          type="text"
+          class="form-control"
+          id="eventTitle"
+          autocomplete="off"
+          [class.is-invalid]="title.invalid && title.touched"
+          [class.is-valid]="title.valid && title.touched"
+          formControlName="title"
+        />
+        <div *ngIf="title?.invalid && title?.touched" class="invalid-feedback text-danger py-2">
+          <div *ngIf="title?.errors?.['required']">Title is required</div>
+          <div *ngIf="title?.errors?.['minlength']">Title length should not be below 5 characters</div>
+          <div *ngIf="title?.errors?.['maxlength']">Title should not exceed 150 characters</div>
+        </div>
+      </div>
+      <div class="py-2">
+        <label for="eventCategory">Category: </label>
+        <select
+          class="form-select"
+          id="eventCategory"
+          autocomplete="off"
+          [class.is-invalid]="categoryId.invalid && categoryId.touched"
+          [class.is-valid]="categoryId.valid && categoryId.touched"
+          formControlName="categoryId"
+        >
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+        </select>
+        <div *ngIf="categoryId?.invalid && categoryId?.touched" class="invalid-feedback text-danger">
+          <div *ngIf="categoryId?.errors?.['required']">Category is required</div>
+        </div>
+      </div>
+      <div class="py-2">
+        <span class="mb-3">Content: </span>
+        <textarea
+          class="form-control"
+          id="eventContent"
+          autocomplete="off"
+          [class.is-invalid]="content.invalid && content.touched"
+          [class.is-valid]="content.valid && content.touched"
+          formControlName="content"
+        ></textarea>
+        <div *ngIf="content.invalid && content.touched" class="invalid-feedback text-danger">
+          <div *ngIf="content?.errors?.['required']">Content is required</div>
+          <div *ngIf="content?.errors?.['maxlength']">Event content should not exceed 2500 characters</div>
+        </div>
+      </div>
+      <div class="float-end">
+        <button
+          [routerLink]="['/']"
+          class="btn btn-outline-danger me-2 mt-3"
+          type="button"
+        >
+          Close
+        </button>
+        <button
+          class="btn btn-success mt-3"
+          type="submit"
+        >
+          Event message
+        </button>
+      </div>
+    </form>
+  </main>
+</div>

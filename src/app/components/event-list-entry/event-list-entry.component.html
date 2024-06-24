@@ -1,0 +1,10 @@
+<div class="card mb-3 shadow-sm" *ngIf="event">
+  <div class="card-body">
+    <h5 class="card-title">{{ event.title }}</h5>
+    <p class="card-text">{{ event.content }}</p>
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="badge bg-primary">{{ event.category.name }}</span>
+      <small class="text-muted">{{ event.createdDate | date: 'short' }}</small>
+    </div>
+  </div>
+</div>
