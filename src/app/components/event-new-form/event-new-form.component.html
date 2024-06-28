@@ -65,19 +65,33 @@
         </div>
       </div>
       <div class="py-2">
-        <label for="eventUser">User: </label>
-        <select
-          class="form-select"
-          id="eventUser"
-          formControlName="userId"
+        <label for="eventCreator">Event Creator: </label>
+        <input
+          type="text"
+          class="form-control"
+          id="eventCreator"
+          formControlName="creatorName"
           autocomplete="off"
-          [class.is-invalid]="userId.invalid && userId.touched"
-          [class.is-valid]="userId.valid && userId.touched"
-        >
-          <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
-        </select>
-        <div *ngIf="userId?.invalid && userId?.touched" class="invalid-feedback text-danger">
-          <div *ngIf="userId?.errors?.['required']">User is required</div>
+          [class.is-invalid]="creatorName.invalid && creatorName.touched"
+          [class.is-valid]="creatorName.valid && creatorName.touched"
+        />
+        <div *ngIf="creatorName?.invalid && creatorName?.touched" class="invalid-feedback text-danger">
+          <div *ngIf="creatorName?.errors?.['required']">Creator Name is required</div>
+        </div>
+      </div>
+      <div class="py-2">
+        <label for="eventContent">Content: </label>
+        <textarea
+          class="form-control"
+          id="eventContent"
+          formControlName="content"
+          autocomplete="off"
+          [class.is-invalid]="content.invalid && content.touched"
+          [class.is-valid]="content.valid && content.touched"
+        ></textarea>
+        <div *ngIf="content?.invalid && content?.touched" class="invalid-feedback text-danger">
+          <div *ngIf="content?.errors?.['required']">Content is required</div>
+          <div *ngIf="content?.errors?.['maxlength']">Content should not exceed 2500 characters</div>
         </div>
       </div>
       <div class="float-end">

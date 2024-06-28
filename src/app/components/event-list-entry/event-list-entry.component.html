@@ -1,4 +1,4 @@
-<div class="card mb-3 shadow-sm" *ngIf="event">
+<div class="card mb-3 shadow-sm" *ngIf="event" (click)="navigateToEventDetails()">
   <div class="card-body">
     <h5 class="card-title">{{ event.title }}</h5>
     <p class="card-text">{{ event.content }}</p>

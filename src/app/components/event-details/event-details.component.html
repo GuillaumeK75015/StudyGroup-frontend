@@ -1,0 +1,75 @@
+<div *ngIf="event">
+  <h1>{{ event.title }}</h1>
+  <p>{{ event.content }}</p>
+  <p>Created by: {{ event.creatorName }}</p>
+  <p>Location: {{ event.location }}</p>
+  <p>Date and Time: {{ event.dateTime | date: 'short' }}</p>
+  <p>Category: {{ event.category.name }}</p>
+  <p *ngIf="event.lastModifiedBy">Last modified by: {{ event.lastModifiedBy }}</p>
+  <p>Participants:</p>
+  <ul>
+    <li *ngFor="let participant of event.participants">
+      {{ participant }}
+      <button (click)="removeParticipant(participant)">Remove</button>
+    </li>
+  </ul>
+  <input [(ngModel)]="newParticipant" placeholder="Add Participant" />
+  <button (click)="addParticipant()">Add</button>
+
+  <!-- Buttons for Update and Delete -->
+  <div *ngIf="canModify" style="margin-top: 10px;">
+    <button (click)="toggleUpdateForm()" style="margin-right: 10px;">Change StudyGroup informations</button>
+    <button (click)="deleteEvent()">Delete StudyGroup</button>
+  </div>
+
+  <!-- Update Event Form -->
+  <div *ngIf="showUpdateForm" style="margin-top: 20px;">
+    <h3>Change StudyGroup informations</h3>
+    <form [formGroup]="updateEventForm" (ngSubmit)="onUpdateSubmit()">
+      <label for="title">Title:</label>
+      <input id="title" formControlName="title" style="display: block; margin-bottom: 10px;" />
+
+      <label for="location">Location:</label>
+      <input id="location" formControlName="location" style="display: block; margin-bottom: 10px;" />
+
+      <label for="dateTime">Date and Time:</label>
+      <input id="dateTime" type="datetime-local" formControlName="dateTime" style="display: block; margin-bottom: 10px;" />
+
+      <label for="content">Content:</label>
+      <textarea id="content" formControlName="content" style="display: block; margin-bottom: 10px;"></textarea>
+
+      <label for="category">Category:</label>
+      <select id="category" formControlName="categoryId" style="display: block; margin-bottom: 10px;">
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+      </select>
+
+      <label for="lastModifiedBy">Modified By:</label>
+      <input id="lastModifiedBy" formControlName="lastModifiedBy" style="display: block; margin-bottom: 10px;" />
+
+      <button type="submit">Update Event</button>
+    </form>
+  </div>
+
+  <!-- Rating and Review Section -->
+  <div *ngIf="eventPassed" style="margin-top: 20px;">
+    <h3>Rate and Review Event</h3>
+    <ul>
+      <li *ngFor="let review of event.reviews">
+        <strong>{{ review.reviewerName }}:</strong> {{ review.review }} <br>
+        <strong>Rating:</strong> {{ review.rating }}
+      </li>
+    </ul>
+    <form [formGroup]="ratingReviewForm" (ngSubmit)="onRatingReviewSubmit()">
+      <label for="rating">Rating:</label>
+      <input id="rating" formControlName="rating" type="number" min="1" max="5" style="display: block; margin-bottom: 10px;" />
+
+      <label for="review">Review:</label>
+      <textarea id="review" formControlName="review" style="display: block; margin-bottom: 10px;"></textarea>
+
+      <label for="reviewerName">Your Name:</label>
+      <input id="reviewerName" formControlName="reviewerName" style="display: block; margin-bottom: 10px;" />
+
+      <button type="submit">Submit Review</button>
+    </form>
+  </div>
+

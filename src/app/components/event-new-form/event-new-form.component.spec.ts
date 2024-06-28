@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventService } from '../../services/event.service';
 import { CategoryService } from '../../services/category.service';
-import { UserService } from '../../services/user.service';
 import { EventCreateInput } from '../../data/event';
 
 @Component({
@@ -27,13 +26,12 @@ export class EventNewFormComponent implements OnInit {
       location: ['', Validators.required],
       dateTime: ['', Validators.required],
       content: ['', [Validators.required, Validators.maxLength(2500)]],
-      userId: ['', Validators.required]
+      eventCreator: ['', Validators.required]
     });
   }
 
   ngOnInit() {
     this.loadCategories();
-    this.loadUsers();
   }
 
   loadCategories() {
@@ -42,11 +40,7 @@ export class EventNewFormComponent implements OnInit {
     });
   }
 
-  loadUsers() {
-    this.userService.getUsers().subscribe(users => {
-      this.users = users;
-    });
-  }
+  l
 
   onSubmit() {
     if (this.addEventForm.valid) {
