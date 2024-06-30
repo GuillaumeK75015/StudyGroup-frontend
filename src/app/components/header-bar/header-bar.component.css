@@ -1,0 +1,45 @@
+/* Style for navbar */
+.navbar {
+  background-color: #f8f9fa !important;
+  border-bottom: 2px solid #e9ecef;
+  padding: 15px 10px;
+}
+
+/* Navbar brand styling */
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #343a40 !important;
+}
+
+.navbar-brand i {
+  font-size: 1.2rem;
+  margin-right: 5px;
+}
+
+/* Button styling */
+.btn-outline-success {
+  color: #28a745;
+  border-color: #28a745;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url('data:image/svg+xml;...');
+}
+
+/* Media queries for responsive design */
+@media (max-width: 767.98px) {
+  .navbar {
+    padding: 10px;
+  }
+}

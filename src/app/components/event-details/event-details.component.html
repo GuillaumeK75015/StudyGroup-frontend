@@ -1,75 +1,101 @@
-<div *ngIf="event">
-  <h1>{{ event.title }}</h1>
-  <p>{{ event.content }}</p>
-  <p>Created by: {{ event.creatorName }}</p>
-  <p>Location: {{ event.location }}</p>
-  <p>Date and Time: {{ event.dateTime | date: 'short' }}</p>
-  <p>Category: {{ event.category.name }}</p>
-  <p *ngIf="event.lastModifiedBy">Last modified by: {{ event.lastModifiedBy }}</p>
-  <p>Participants:</p>
-  <ul>
-    <li *ngFor="let participant of event.participants">
-      {{ participant }}
-      <button (click)="removeParticipant(participant)">Remove</button>
-    </li>
-  </ul>
-  <input [(ngModel)]="newParticipant" placeholder="Add Participant" />
-  <button (click)="addParticipant()">Add</button>
+<div class="container py-3">
+  <div class="card mb-3 event-card">
+    <div class="card-body">
+      <h1 class="card-title">{{ event?.title }}</h1>
+      <p class="card-text">{{ event?.content }}</p>
+      <p class="card-text"><strong>Created by:</strong> {{ event?.creatorName }}</p>
+      <p class="card-text"><strong>Location:</strong> {{ event?.location }}</p>
+      <p class="card-text"><strong>Date and Time:</strong> {{ event?.dateTime | date: 'short' }}</p>
+      <p class="card-text"><strong>Category:</strong> {{ event?.category?.name }}</p>
+      <p *ngIf="event?.lastModifiedBy" class="card-text"><strong>Last modified by:</strong> {{ event?.lastModifiedBy }}</p>
+      <p class="card-text"><strong>Participants:</strong></p>
+      <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let participant of event?.participants">
+          {{ participant }}
+          <button class="btn btn-danger btn-sm" *ngIf="!eventPassed" (click)="removeParticipant(participant)">Remove</button>
+        </li>
+      </ul>
+      <div class="input-group mb-3" *ngIf="!eventPassed">
+        <input [(ngModel)]="newParticipant" placeholder="Add Participant" class="form-control" />
+        <button class="btn btn-primary" (click)="addParticipant()">Add</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Buttons for Update and Delete -->
-  <div *ngIf="canModify" style="margin-top: 10px;">
-    <button (click)="toggleUpdateForm()" style="margin-right: 10px;">Change StudyGroup informations</button>
-    <button (click)="deleteEvent()">Delete StudyGroup</button>
+  <div *ngIf="canModify" class="mb-3">
+    <button class="btn btn-warning me-2" (click)="toggleUpdateForm()">Change StudyGroup informations</button>
+    <button class="btn btn-danger" (click)="deleteEvent()">Delete StudyGroup</button>
   </div>
 
   <!-- Update Event Form -->
-  <div *ngIf="showUpdateForm" style="margin-top: 20px;">
-    <h3>Change StudyGroup informations</h3>
-    <form [formGroup]="updateEventForm" (ngSubmit)="onUpdateSubmit()">
-      <label for="title">Title:</label>
-      <input id="title" formControlName="title" style="display: block; margin-bottom: 10px;" />
-
-      <label for="location">Location:</label>
-      <input id="location" formControlName="location" style="display: block; margin-bottom: 10px;" />
-
-      <label for="dateTime">Date and Time:</label>
-      <input id="dateTime" type="datetime-local" formControlName="dateTime" style="display: block; margin-bottom: 10px;" />
-
-      <label for="content">Content:</label>
-      <textarea id="content" formControlName="content" style="display: block; margin-bottom: 10px;"></textarea>
-
-      <label for="category">Category:</label>
-      <select id="category" formControlName="categoryId" style="display: block; margin-bottom: 10px;">
-        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-      </select>
-
-      <label for="lastModifiedBy">Modified By:</label>
-      <input id="lastModifiedBy" formControlName="lastModifiedBy" style="display: block; margin-bottom: 10px;" />
-
-      <button type="submit">Update Event</button>
-    </form>
+  <div *ngIf="showUpdateForm" class="card mb-3">
+    <div class="card-body">
+      <h3>Change StudyGroup informations</h3>
+      <form [formGroup]="updateEventForm" (ngSubmit)="onUpdateSubmit()">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title:</label>
+          <input id="title" formControlName="title" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="location" class="form-label">Location:</label>
+          <input id="location" formControlName="location" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="dateTime" class="form-label">Date and Time:</label>
+          <input id="dateTime" type="datetime-local" formControlName="dateTime" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Content:</label>
+          <textarea id="content" formControlName="content" class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="category" class="form-label">Category:</label>
+          <select id="category" formControlName="categoryId" class="form-select">
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="lastModifiedBy" class="form-label">Modified By:</label>
+          <input id="lastModifiedBy" formControlName="lastModifiedBy" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Update Event</button>
+      </form>
+    </div>
   </div>
 
   <!-- Rating and Review Section -->
-  <div *ngIf="eventPassed" style="margin-top: 20px;">
-    <h3>Rate and Review Event</h3>
-    <ul>
-      <li *ngFor="let review of event.reviews">
-        <strong>{{ review.reviewerName }}:</strong> {{ review.review }} <br>
-        <strong>Rating:</strong> {{ review.rating }}
-      </li>
-    </ul>
-    <form [formGroup]="ratingReviewForm" (ngSubmit)="onRatingReviewSubmit()">
-      <label for="rating">Rating:</label>
-      <input id="rating" formControlName="rating" type="number" min="1" max="5" style="display: block; margin-bottom: 10px;" />
-
-      <label for="review">Review:</label>
-      <textarea id="review" formControlName="review" style="display: block; margin-bottom: 10px;"></textarea>
-
-      <label for="reviewerName">Your Name:</label>
-      <input id="reviewerName" formControlName="reviewerName" style="display: block; margin-bottom: 10px;" />
-
-      <button type="submit">Submit Review</button>
-    </form>
+  <div *ngIf="eventPassed" class="card mb-3">
+    <div class="card-body">
+      <h3>Feedback</h3>
+      <ul class="list-group mb-3">
+        <li class="list-group-item" *ngFor="let review of event?.reviews">
+          <strong>{{ review.reviewerName }}:</strong> {{ review.review }}
+          <span class="d-flex align-items-center">
+            <strong class="me-2">Rating:</strong>
+            <div class="review-rating">
+              <i class="bi" [ngClass]="{'bi-star-fill': star <= review.rating, 'bi-star': star > review.rating}" *ngFor="let star of [1, 2, 3, 4, 5]"></i>
+            </div>
+          </span>
+        </li>
+      </ul>
+      <form [formGroup]="ratingReviewForm" (ngSubmit)="onRatingReviewSubmit()">
+        <div class="mb-3">
+          <label for="reviewerName" class="form-label">Your Name:</label>
+          <input id="reviewerName" formControlName="reviewerName" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="rating" class="form-label">Rating:</label>
+          <div class="star-rating">
+            <i class="bi" [ngClass]="{'bi-star-fill': star <= selectedRating, 'bi-star': star > selectedRating}" *ngFor="let star of [1, 2, 3, 4, 5]" (click)="setRating(star)"></i>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="review" class="form-label">Review:</label>
+          <textarea id="review" formControlName="review" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+      </form>
+    </div>
   </div>
-
+</div>

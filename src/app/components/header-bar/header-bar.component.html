@@ -1,12 +1,25 @@
-<nav class="navbar bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" [routerLink]="['/']">
-      <i class="bi bi-postcard"></i> Event - website
+      <i class="bi bi-postcard"></i> StudyGroup
     </a>
-    <form class="d-flex">
-      <button class="btn btn-outline-success me-2" type="button" [routerLink]="['add-event']">
-        Post <i class="bi bi-pencil ms-1"></i>
-      </button>
-    </form>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <form class="d-flex ms-auto">
+        <button class="btn btn-outline-success me-2" type="button" [routerLink]="['add-event']">
+          New StudyGroup <i class="bi bi-pencil ms-1"></i>
+        </button>
+      </form>
+    </div>
   </div>
 </nav>

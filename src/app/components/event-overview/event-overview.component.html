@@ -1,7 +1,7 @@
 <div class="container py-3">
-  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
-    <div class="row">
-      <div class="col-md-4">
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="mb-4 position-relative form-background">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
         <input
           type="text"
           class="form-control"
@@ -9,13 +9,13 @@
           formControlName="title"
         />
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <select class="form-select" formControlName="categoryId">
           <option value="">All Categories</option>
           <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
         </select>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <input
           type="text"
           class="form-control"
@@ -23,19 +23,30 @@
           formControlName="location"
         />
       </div>
-      <div class="col-md-4 mt-2">
-        <button class="btn btn-primary" type="submit">Search</button>
+      <div class="col-md-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by content"
+          formControlName="content"
+        />
+      </div>
+      <div class="col-md-2 mt-2">
+        <button class="btn btn-primary w-100" type="submit">Search</button>
       </div>
     </div>
+    <button class="btn btn-secondary hide-past-events-btn" (click)="toggleShowPastEvents()">
+      {{ showPastEvents ? 'Hide' : 'Show' }} Past Events
+    </button>
   </form>
   <div class="row mt-3">
-    <div *ngIf="events && events.length">
-      <div *ngFor="let event of events" class="col-md-4">
-        <app-event-list-entry [event]="event"></app-event-list-entry>
+    <div *ngIf="filteredEvents && filteredEvents.length" class="d-flex flex-wrap justify-content-center">
+      <div *ngFor="let event of filteredEvents" class="col-md-4 mb-4">
+        <app-event-list-entry [event]="event" class="event-card"></app-event-list-entry>
       </div>
     </div>
-    <div *ngIf="!events || events.length === 0">
-      <p>No events available.</p>
+    <div *ngIf="!filteredEvents || filteredEvents.length === 0">
+      <p class="text-center">No events available.</p>
     </div>
   </div>
 </div>

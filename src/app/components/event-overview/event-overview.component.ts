@@ -12,8 +12,10 @@ import { Category } from '../../data/category';
 })
 export class EventOverviewComponent implements OnInit {
   events: Event[] = [];
+  filteredEvents: Event[] = [];
   categories: Category[] = [];
   filterForm: FormGroup;
+  showPastEvents = true;
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +25,8 @@ export class EventOverviewComponent implements OnInit {
     this.filterForm = this.fb.group({
       title: [''],
       categoryId: [''],
-      location: ['']
+      location: [''],
+      content: ['']
     });
   }
 
@@ -41,13 +44,28 @@ export class EventOverviewComponent implements OnInit {
   loadEvents(): void {
     this.eventService.getEvents().subscribe(events => {
       this.events = events;
+      this.filterEvents();
     });
   }
 
   onSubmit(): void {
-    const { title, categoryId, location } = this.filterForm.value;
-    this.eventService.searchEvents(title, categoryId, location).subscribe(events => {
+    const { title, categoryId, location, content } = this.filterForm.value;
+    this.eventService.searchEvents(title, categoryId, location, content).subscribe(events => {
       this.events = events;
+      this.filterEvents();
+    });
+  }
+
+  toggleShowPastEvents(): void {
+    this.showPastEvents = !this.showPastEvents;
+    this.filterEvents();
+  }
+
+  filterEvents(): void {
+    const now = new Date();
+    this.filteredEvents = this.events.filter(event => {
+      const isPastEvent = new Date(event.dateTime) < now;
+      return this.showPastEvents || !isPastEvent;
     });
   }
 }

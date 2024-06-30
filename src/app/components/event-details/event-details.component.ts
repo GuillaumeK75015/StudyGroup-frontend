@@ -21,6 +21,7 @@ export class EventDetailsComponent implements OnInit {
   showUpdateForm: boolean = false;
   canModify: boolean = false;
   eventPassed: boolean = false;
+  selectedRating: number = 0;
 
   Toast = Swal.mixin({
     toast: true,
@@ -51,9 +52,9 @@ export class EventDetailsComponent implements OnInit {
     });
 
     this.ratingReviewForm = this.fb.group({
-      reviewerName: ['', Validators.required],
-      rating: ['', [Validators.required, Validators.min(1), Validators.max(5)]],
-      review: ['', Validators.required]
+      rating: [this.selectedRating, [Validators.required, Validators.min(1), Validators.max(5)]],
+      review: ['', Validators.required],
+      reviewerName: ['', Validators.required]
     });
   }
 
@@ -168,6 +169,7 @@ export class EventDetailsComponent implements OnInit {
       this.eventService.addRatingReview(this.event.id, { rating, review, reviewerName }).subscribe({
         next: (updatedEvent) => {
           this.event = updatedEvent;
+          this.resetReviewForm();
           this.Toast.fire({
             icon: "success",
             title: "Review submitted successfully"
@@ -184,6 +186,15 @@ export class EventDetailsComponent implements OnInit {
     }
   }
 
+  resetReviewForm(): void {
+    this.ratingReviewForm.reset();
+    this.selectedRating = 0;
+  }
+
+  setRating(rating: number): void {
+    this.selectedRating = rating;
+    this.ratingReviewForm.patchValue({ rating });
+  }
 
   toggleUpdateForm(): void {
     this.showUpdateForm = !this.showUpdateForm;

@@ -11,22 +11,24 @@ export class EventService {
   constructor(private http: HttpClient) {}
 
   getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.eventsURL);
-  }
+      let params = new HttpParams().set('sort', 'dateTime,asc');
+      return this.http.get<Event[]>(this.eventsURL, { params });
+    }
 
   createEvent(eventRequestBody: EventCreateInput): Observable<Event> {
     console.log("Sending request to create event:", eventRequestBody);
     return this.http.post<Event>(this.eventsURL, eventRequestBody);
   }
 
-  searchEvents(title?: string, categoryId?: string, location?: string): Observable<Event[]> {
-    let params = new HttpParams();
-    if (title) params = params.set('title', title);
-    if (categoryId) params = params.set('categoryId', categoryId);
-    if (location) params = params.set('location', location);
-
-    return this.http.get<Event[]>(`${this.eventsURL}/search`, { params });
-  }
+  searchEvents(title: string, categoryId: string, location: string, content: string): Observable<Event[]> {
+      let params = new HttpParams();
+      if (title) params = params.set('title', title);
+      if (categoryId) params = params.set('categoryId', categoryId);
+      if (location) params = params.set('location', location);
+      if (content) params = params.set('content', content);
+      params = params.set('sort', 'dateTime,asc'); // Ensure sorting in search as well
+      return this.http.get<Event[]>(this.eventsURL+ '/search', { params });
+    }
 
   // Get an event by ID
   getEventById(id: string): Observable<Event> {
